@@ -8,8 +8,16 @@
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "dest": "/smartpark_app/build/web/assets/$1"
+    },
+    {
+      "src": "/(.+\\.(?:js|json|css|png|ico|svg|otf|ttf|woff|woff2|bin|map))",
+      "dest": "/smartpark_app/build/web/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "smartpark_app/build/web/$1"
+      "dest": "/smartpark_app/build/web/index.html"
     }
   ]
 }
