@@ -214,9 +214,11 @@ class _BookingCardState extends ConsumerState<_BookingCard> {
                     constraints: const BoxConstraints(),
                     onPressed: () async {
                       final uri = Uri.parse(booking.directionsUrl);
-                      if (await canLaunchUrl(uri)) {
+                      try {
                         await launchUrl(uri,
                             mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        debugPrint('Could not launch URL: $e');
                       }
                     },
                     tooltip: 'Get Directions',
@@ -325,9 +327,11 @@ class _BookingCardState extends ConsumerState<_BookingCard> {
                   OutlinedButton.icon(
                     onPressed: () async {
                       final uri = Uri.parse(booking.directionsUrl);
-                      if (await canLaunchUrl(uri)) {
+                      try {
                         await launchUrl(uri,
                             mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        debugPrint('Could not launch URL: $e');
                       }
                     },
                     icon: const Icon(Icons.directions_rounded, size: 18),

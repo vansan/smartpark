@@ -146,9 +146,11 @@ class BookingQrScreen extends ConsumerWidget {
                               constraints: const BoxConstraints(),
                               onPressed: () async {
                                 final uri = Uri.parse(booking.directionsUrl);
-                                if (await canLaunchUrl(uri)) {
+                                try {
                                   await launchUrl(uri,
                                       mode: LaunchMode.externalApplication);
+                                } catch (e) {
+                                  debugPrint('Could not launch URL: $e');
                                 }
                               },
                               tooltip: 'Get Directions',
@@ -487,9 +489,11 @@ class _DirectionsCard extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () async {
                 final uri = Uri.parse(booking.directionsUrl);
-                if (await canLaunchUrl(uri)) {
+                try {
                   await launchUrl(uri,
                       mode: LaunchMode.externalApplication);
+                } catch (e) {
+                  debugPrint('Could not launch URL: $e');
                 }
               },
               icon: const Icon(Icons.map_rounded, size: 18),
