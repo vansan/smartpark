@@ -72,13 +72,17 @@ class BookingService {
             .collection(AppConstants.bookingsCollection)
             .doc(bookingId);
 
+        final displayLocationName = slot.sectionName.isNotEmpty
+            ? '$locationName (${slot.sectionName})'
+            : locationName;
+
         final booking = BookingModel(
           bookingId: bookingId!,
           userId: userId,
           slotId: slot.slotId,
           locationId: slot.locationId,
           slotNumber: slot.slotNumber,
-          locationName: locationName,
+          locationName: displayLocationName,
           createdAt: DateTime.now(),
           startTime: startTime,
           endTime: endTime,

@@ -170,6 +170,16 @@ class FirestoreService {
       }
     }
 
+    final slotsSnap = await _db.collection(AppConstants.parkingSlotsCollection).limit(1).get();
+    if (slotsSnap.docs.isEmpty) {
+      needsCoordinatesUpdate = true;
+    } else {
+      final firstSlot = slotsSnap.docs.first.data();
+      if (firstSlot['lat'] == null || firstSlot['lat'] == 0.0) {
+        needsCoordinatesUpdate = true;
+      }
+    }
+
     if (locSnap.docs.isNotEmpty && !needsCoordinatesUpdate) return; // already seeded and has coordinates
 
     final locations = [
@@ -210,19 +220,53 @@ class FirestoreService {
         SetOptions(merge: true),
       );
 
-      // Only seed slots if the location didn't exist
-      final existingDoc = locSnap.docs.any((doc) => doc.id == loc['id']);
-      if (!existingDoc) {
-        for (int i = 1; i <= 10; i++) {
-          final slotRef = _db
-              .collection(AppConstants.parkingSlotsCollection)
-              .doc('${loc['id']}_slot_$i');
-          batch.set(slotRef, {
+      // Seed/update slots with specific parking structure coordinates
+      for (int i = 1; i <= 10; i++) {
+        final slotRef = _db
+            .collection(AppConstants.parkingSlotsCollection)
+            .doc('${loc['id']}_slot_$i');
+
+        double slotLat = loc['lat'] as double;
+        double slotLng = loc['lng'] as double;
+        String sectionName = '';
+
+        if (loc['id'] == 'dubai_mall') {
+          if (i <= 3) {
+            sectionName = 'Grand Parking';
+            slotLat = 25.1960;
+            slotLng = 55.2785;
+          } else if (i <= 6) {
+            sectionName = 'Fashion Parking';
+            slotLat = 25.1980;
+            slotLng = 55.2795;
+          } else {
+            sectionName = 'Cinema Parking';
+            slotLat = 25.2005;
+            slotLng = 55.2770;
+          }
+        } else if (loc['id'] == 'marina_mall') {
+          if (i <= 5) {
+            sectionName = 'Level P1 (Grand)';
+            slotLat = 25.0770;
+            slotLng = 55.1335;
+          } else {
+            sectionName = 'Level P2 (Cinema)';
+            slotLat = 25.0775;
+            slotLng = 55.1325;
+          }
+        }
+
+        batch.set(
+          slotRef,
+          {
             'locationId': loc['id'],
             'slotNumber': 'P${i.toString().padLeft(2, '0')}',
-            'status': 'free',
-          });
-        }
+            'lat': slotLat,
+            'lng': slotLng,
+            'sectionName': sectionName,
+          },
+          SetOptions(merge: true),
+        );
       }
     }
 

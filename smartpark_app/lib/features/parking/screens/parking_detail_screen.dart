@@ -272,9 +272,13 @@ class _BookingBottomSheetState extends State<_BookingBottomSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.locationName,
-                        style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 12)),
+                    Text(
+                      widget.slot.sectionName.isNotEmpty
+                          ? '${widget.locationName} · ${widget.slot.sectionName}'
+                          : widget.locationName,
+                      style: const TextStyle(
+                          color: AppTheme.textSecondary, fontSize: 12),
+                    ),
                     Text(
                       'Slot ${widget.slot.slotNumber}',
                       style: const TextStyle(
@@ -362,8 +366,8 @@ class _BookingBottomSheetState extends State<_BookingBottomSheet> {
                   'endTime': _endDateTime,
                   'durationHours': _durationHours,
                   'total': _total,
-                  'locationLat': widget.locationLat,
-                  'locationLng': widget.locationLng,
+                  'locationLat': widget.slot.lat != 0.0 ? widget.slot.lat : widget.locationLat,
+                  'locationLng': widget.slot.lng != 0.0 ? widget.slot.lng : widget.locationLng,
                 },
               );
             },
@@ -556,6 +560,17 @@ class _SlotCard extends StatelessWidget {
                     color: AppTheme.textPrimary,
                   ),
                 ),
+                if (slot.sectionName.isNotEmpty)
+                  Text(
+                    slot.sectionName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 10,
+                    ),
+                  ),
+                const SizedBox(height: 2),
                 Text(
                   _statusLabel,
                   style: TextStyle(
