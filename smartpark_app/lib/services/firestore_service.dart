@@ -156,7 +156,21 @@ class FirestoreService {
   Future<void> seedMockData() async {
     final locSnap =
         await _db.collection(AppConstants.parkingLocationsCollection).get();
-    if (locSnap.docs.isNotEmpty) return; // already seeded
+
+    // Check if coordinates are missing in any of the seeded documents
+    bool needsCoordinatesUpdate = false;
+    for (var doc in locSnap.docs) {
+      final data = doc.data();
+      if (data['lat'] == null ||
+          data['lat'] == 0.0 ||
+          data['lng'] == null ||
+          data['lng'] == 0.0) {
+        needsCoordinatesUpdate = true;
+        break;
+      }
+    }
+
+    if (locSnap.docs.isNotEmpty && !needsCoordinatesUpdate) return; // already seeded and has coordinates
 
     final locations = [
       {
@@ -183,23 +197,32 @@ class FirestoreService {
       final locRef = _db
           .collection(AppConstants.parkingLocationsCollection)
           .doc(loc['id'] as String);
-      batch.set(locRef, {
-        'name': loc['name'],
-        'address': loc['address'],
-        'lat': loc['lat'],
-        'lng': loc['lng'],
-        'totalSlots': loc['totalSlots'],
-      });
+      
+      batch.set(
+        locRef,
+        {
+          'name': loc['name'],
+          'address': loc['address'],
+          'lat': loc['lat'],
+          'lng': loc['lng'],
+          'totalSlots': loc['totalSlots'],
+        },
+        SetOptions(merge: true),
+      );
 
-      for (int i = 1; i <= 10; i++) {
-        final slotRef = _db
-            .collection(AppConstants.parkingSlotsCollection)
-            .doc('${loc['id']}_slot_$i');
-        batch.set(slotRef, {
-          'locationId': loc['id'],
-          'slotNumber': 'P${i.toString().padLeft(2, '0')}',
-          'status': 'free',
-        });
+      // Only seed slots if the location didn't exist
+      final existingDoc = locSnap.docs.any((doc) => doc.id == loc['id']);
+      if (!existingDoc) {
+        for (int i = 1; i <= 10; i++) {
+          final slotRef = _db
+              .collection(AppConstants.parkingSlotsCollection)
+              .doc('${loc['id']}_slot_$i');
+          batch.set(slotRef, {
+            'locationId': loc['id'],
+            'slotNumber': 'P${i.toString().padLeft(2, '0')}',
+            'status': 'free',
+          });
+        }
       }
     }
 

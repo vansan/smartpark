@@ -42,7 +42,21 @@ class BookingModel {
     return remaining.isNegative ? Duration.zero : remaining;
   }
 
-  bool get hasCoordinates => locationLat != 0.0 && locationLng != 0.0;
+  double get effectiveLat {
+    if (locationLat != 0.0) return locationLat;
+    if (locationId == 'dubai_mall') return 25.1972;
+    if (locationId == 'marina_mall') return 25.0771;
+    return 0.0;
+  }
+
+  double get effectiveLng {
+    if (locationLng != 0.0) return locationLng;
+    if (locationId == 'dubai_mall') return 55.2796;
+    if (locationId == 'marina_mall') return 55.1330;
+    return 0.0;
+  }
+
+  bool get hasCoordinates => effectiveLat != 0.0 && effectiveLng != 0.0;
 
   factory BookingModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -96,6 +110,6 @@ class BookingModel {
   /// Google Maps directions URL
   String get directionsUrl =>
       'https://www.google.com/maps/dir/?api=1'
-      '&destination=$locationLat,$locationLng'
+      '&destination=$effectiveLat,$effectiveLng'
       '&travelmode=driving';
 }

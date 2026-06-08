@@ -138,6 +138,22 @@ class BookingQrScreen extends ConsumerWidget {
                               ),
                             ),
                           ),
+                          if (booking.hasCoordinates)
+                            IconButton(
+                              icon: const Icon(Icons.directions_rounded,
+                                  color: Color(0xFF4285F4), size: 20),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: () async {
+                                final uri = Uri.parse(booking.directionsUrl);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri,
+                                      mode: LaunchMode.externalApplication);
+                                }
+                              },
+                              tooltip: 'Get Directions',
+                            ),
+                          if (booking.hasCoordinates) const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 4),
