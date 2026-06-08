@@ -10,11 +10,15 @@ import '../../../services/booking_service.dart';
 class ParkingDetailScreen extends ConsumerWidget {
   final String locationId;
   final String locationName;
+  final double locationLat;
+  final double locationLng;
 
   const ParkingDetailScreen({
     super.key,
     required this.locationId,
     required this.locationName,
+    this.locationLat = 0.0,
+    this.locationLng = 0.0,
   });
 
   @override
@@ -131,6 +135,8 @@ class ParkingDetailScreen extends ConsumerWidget {
         slot: slot,
         locationId: locationId,
         locationName: locationName,
+        locationLat: locationLat,
+        locationLng: locationLng,
       ),
     );
   }
@@ -142,11 +148,15 @@ class _BookingBottomSheet extends StatefulWidget {
   final ParkingSlotModel slot;
   final String locationId;
   final String locationName;
+  final double locationLat;
+  final double locationLng;
 
   const _BookingBottomSheet({
     required this.slot,
     required this.locationId,
     required this.locationName,
+    required this.locationLat,
+    required this.locationLng,
   });
 
   @override
@@ -352,6 +362,8 @@ class _BookingBottomSheetState extends State<_BookingBottomSheet> {
                   'endTime': _endDateTime,
                   'durationHours': _durationHours,
                   'total': _total,
+                  'locationLat': widget.locationLat,
+                  'locationLng': widget.locationLng,
                 },
               );
             },

@@ -87,7 +87,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 title: loc.name,
                 snippet: 'Tap to view slots',
                 onTap: () => context.push(
-                  '/parking/${loc.locationId}?name=${Uri.encodeComponent(loc.name)}',
+                  '/parking/${loc.locationId}?name=${Uri.encodeComponent(loc.name)}&lat=${loc.lat}&lng=${loc.lng}',
                 ),
               ),
               icon: BitmapDescriptor.defaultMarkerWithHue(
@@ -181,7 +181,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                   _animateTo(location.lat, location.lng);
                                 }
                                 context.push(
-                                  '/parking/${location.locationId}?name=${Uri.encodeComponent(location.name)}',
+                                  '/parking/${location.locationId}?name=${Uri.encodeComponent(location.name)}&lat=${location.lat}&lng=${location.lng}',
                                 );
                               },
                             );
@@ -244,7 +244,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   locationName: loc.name,
                   onTap: () {
                     context.push(
-                      '/parking/${loc.locationId}?name=${Uri.encodeComponent(loc.name)}',
+                      '/parking/${loc.locationId}?name=${Uri.encodeComponent(loc.name)}&lat=${loc.lat}&lng=${loc.lng}',
                     );
                   },
                 ),

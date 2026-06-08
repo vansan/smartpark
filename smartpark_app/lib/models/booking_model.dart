@@ -14,6 +14,8 @@ class BookingModel {
   final int durationHours;
   final double amountPaid;
   final String status; // active, completed, cancelled
+  final double locationLat;
+  final double locationLng;
 
   const BookingModel({
     required this.bookingId,
@@ -28,6 +30,8 @@ class BookingModel {
     required this.durationHours,
     required this.amountPaid,
     required this.status,
+    this.locationLat = 0.0,
+    this.locationLng = 0.0,
   });
 
   bool get isExpired =>
@@ -37,6 +41,8 @@ class BookingModel {
     final remaining = endTime.difference(DateTime.now());
     return remaining.isNegative ? Duration.zero : remaining;
   }
+
+  bool get hasCoordinates => locationLat != 0.0 && locationLng != 0.0;
 
   factory BookingModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -55,6 +61,8 @@ class BookingModel {
       durationHours: (data['durationHours'] as int?) ?? 1,
       amountPaid: (data['amountPaid'] as num?)?.toDouble() ?? 0.0,
       status: data['status'] ?? 'active',
+      locationLat: (data['locationLat'] as num?)?.toDouble() ?? 0.0,
+      locationLng: (data['locationLng'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -71,6 +79,8 @@ class BookingModel {
       'durationHours': durationHours,
       'amountPaid': amountPaid,
       'status': status,
+      'locationLat': locationLat,
+      'locationLng': locationLng,
     };
   }
 
@@ -82,4 +92,10 @@ class BookingModel {
       'userId': userId,
     });
   }
+
+  /// Google Maps directions URL
+  String get directionsUrl =>
+      'https://www.google.com/maps/dir/?api=1'
+      '&destination=$locationLat,$locationLng'
+      '&travelmode=driving';
 }

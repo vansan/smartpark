@@ -15,6 +15,8 @@ class PaymentSummaryScreen extends ConsumerStatefulWidget {
   final DateTime endTime;
   final int durationHours;
   final double total;
+  final double locationLat;
+  final double locationLng;
 
   const PaymentSummaryScreen({
     super.key,
@@ -25,6 +27,8 @@ class PaymentSummaryScreen extends ConsumerStatefulWidget {
     required this.endTime,
     required this.durationHours,
     required this.total,
+    this.locationLat = 0.0,
+    this.locationLng = 0.0,
   });
 
   @override
@@ -59,6 +63,8 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
           endTime: widget.endTime,
           durationHours: widget.durationHours,
           amountPaid: widget.total,
+          locationLat: widget.locationLat,
+          locationLng: widget.locationLng,
         );
 
     if (!mounted) return;

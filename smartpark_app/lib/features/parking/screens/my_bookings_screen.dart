@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../services/firestore_service.dart';
 import '../../../models/booking_model.dart';
 import '../../../core/theme/app_theme.dart';
@@ -302,6 +303,27 @@ class _BookingCardState extends ConsumerState<_BookingCard> {
                   ),
                 ),
                 const SizedBox(height: 8),
+
+                // ── Get Directions Button ─────────────────────────────────
+                if (booking.hasCoordinates)
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      final uri = Uri.parse(booking.directionsUrl);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    icon: const Icon(Icons.directions_rounded, size: 18),
+                    label: const Text('Get Directions'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF4285F4),
+                      side: const BorderSide(
+                          color: Color(0xFF4285F4), width: 1.5),
+                    ),
+                  ),
+
+                if (booking.hasCoordinates) const SizedBox(height: 8),
 
                 // ── Release Button ────────────────────────────────────────
                 OutlinedButton.icon(

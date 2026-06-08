@@ -44,6 +44,8 @@ class BookingService {
     required DateTime endTime,
     required int durationHours,
     required double amountPaid,
+    double locationLat = 0.0,
+    double locationLng = 0.0,
   }) async {
     final slotRef = _db
         .collection(AppConstants.parkingSlotsCollection)
@@ -83,6 +85,8 @@ class BookingService {
           durationHours: durationHours,
           amountPaid: amountPaid,
           status: AppConstants.bookingActive,
+          locationLat: locationLat,
+          locationLng: locationLng,
         );
 
         // Update slot status atomically

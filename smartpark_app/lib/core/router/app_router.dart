@@ -48,9 +48,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final locationId = state.pathParameters['locationId']!;
           final locationName =
               state.uri.queryParameters['name'] ?? 'Parking';
+          final locationLat =
+              double.tryParse(state.uri.queryParameters['lat'] ?? '') ?? 0.0;
+          final locationLng =
+              double.tryParse(state.uri.queryParameters['lng'] ?? '') ?? 0.0;
           return ParkingDetailScreen(
             locationId: locationId,
             locationName: locationName,
+            locationLat: locationLat,
+            locationLng: locationLng,
           );
         },
       ),
@@ -67,6 +73,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             endTime: extra['endTime'] as DateTime,
             durationHours: extra['durationHours'] as int,
             total: extra['total'] as double,
+            locationLat: (extra['locationLat'] as double?) ?? 0.0,
+            locationLng: (extra['locationLng'] as double?) ?? 0.0,
           );
         },
       ),

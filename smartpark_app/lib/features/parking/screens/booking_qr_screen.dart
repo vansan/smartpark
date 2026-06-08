@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../services/firestore_service.dart';
 import '../../../models/booking_model.dart';
 import '../../../core/theme/app_theme.dart';
@@ -186,6 +187,12 @@ class BookingQrScreen extends ConsumerWidget {
                 ),
 
                 const SizedBox(height: 20),
+
+                // ── Get Directions ───────────────────────────────────────
+                if (booking.hasCoordinates)
+                  _DirectionsCard(booking: booking),
+
+                if (booking.hasCoordinates) const SizedBox(height: 20),
 
                 // ── Buttons ──────────────────────────────────────────────
                 ElevatedButton.icon(
@@ -410,6 +417,72 @@ class _InfoRow extends StatelessWidget {
               fontSize: highlight ? 15 : 13,
               fontWeight:
                   highlight ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Directions Card ───────────────────────────────────────────────────────────
+
+class _DirectionsCard extends StatelessWidget {
+  final BookingModel booking;
+  const _DirectionsCard({required this.booking});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+            color: const Color(0xFF4285F4).withValues(alpha: 0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.directions_rounded,
+                  color: Color(0xFF4285F4), size: 18),
+              SizedBox(width: 8),
+              Text(
+                'Get Directions to Parking',
+                style: TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            booking.locationName,
+            style: const TextStyle(
+                color: AppTheme.textSecondary, fontSize: 12),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                final uri = Uri.parse(booking.directionsUrl);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri,
+                      mode: LaunchMode.externalApplication);
+                }
+              },
+              icon: const Icon(Icons.map_rounded, size: 18),
+              label: const Text('Open in Google Maps'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4285F4),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
             ),
           ),
         ],
