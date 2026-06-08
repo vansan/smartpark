@@ -8,6 +8,7 @@
 - 🗺️ Interactive map showing parking locations (Dubai)
 - 🟢 Real-time slot availability (Free / Booked / Occupied)
 - 📅 Date, time & duration-based slot booking
+- 🗺️ **GPS Directions to Parking Spot**: Route navigation directly from the user's location to their specific booked parking space.
 - 💳 Mock prepaid payment flow (AED 5/hr + 5% VAT)
 - 📱 QR code generation for parking entry validation
 - 🔃 3-step parking flow: Book → Show QR → Park Vehicle
@@ -27,7 +28,17 @@
 
 ## Live Demo
 
-Deployed on Vercel — see [deployment URL]
+Deployed on Vercel: [https://smartpark-lac.vercel.app/](https://smartpark-lac.vercel.app/)
+
+## Stakeholder Presentation 📊
+
+The stakeholder presentation slides are saved directly in this repository as:
+- [SmartPark_Stakeholder_Presentation.pptx](file:///C:/work/SmartPark/SmartPark_Stakeholder_Presentation.pptx)
+
+**How to download the presentation:**
+1. Go to the repository on GitHub: [https://github.com/vansan/smartpark](https://github.com/vansan/smartpark)
+2. Click on the file `SmartPark_Stakeholder_Presentation.pptx`.
+3. Click the **"Download raw file"** button (or the download icon on the right side of the screen) to save the PowerPoint file directly to your local computer.
 
 ## Color Theme
 
