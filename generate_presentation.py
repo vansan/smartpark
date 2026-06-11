@@ -427,12 +427,12 @@ phases = [
     ("Phase 3\nWeeks 6-8",  UAE_WHITE, [
         "Barrier/gate hardware integration",
         "License plate recognition (ANPR)",
-        "Monthly subscriber plans",
+        "IoT sensors for each parking slot",
     ]),
     ("Phase 4\nWeeks 9-12", GREY_TEXT, [
-        "Multi-city rollout",
-        "Fleet / corporate accounts",
-        "Analytics & revenue dashboard",
+        "AI camera slot detection in lot",
+        "Heatmap analytics & prediction",
+        "Multi-city rollout & corporate",
     ]),
 ]
 for i, (phase, color, items) in enumerate(phases):
@@ -485,5 +485,11 @@ slide_number(sl, 11)
 
 # ── Save ──────────────────────────────────────────────────────────────────────
 out = r"C:\work\SmartPark\SmartPark_Stakeholder_Presentation.pptx"
-prs.save(out)
-print(f"Saved: {out}")
+try:
+    prs.save(out)
+    print(f"Saved: {out}")
+except PermissionError:
+    alt_out = r"C:\work\SmartPark\SmartPark_Stakeholder_Presentation_v2.pptx"
+    prs.save(alt_out)
+    print(f"Saved (Alternative): {alt_out}")
+    print("Warning: Original file was locked, saved to alternative path.")
